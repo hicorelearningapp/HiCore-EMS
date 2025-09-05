@@ -1,0 +1,15 @@
+from pydantic import BaseModel
+from typing import Optional, Dict
+
+class InsuranceQuery(BaseModel):
+    user_id: str
+    age: Optional[int] = None
+    preexisting_conditions: Optional[list] = []
+    preferences: Optional[Dict] = {}
+
+class InsurancePlan(BaseModel):
+    id: Optional[str] = None
+    name: str
+    sum_insured: int
+    premium: float
+    details: Optional[Dict] = {}

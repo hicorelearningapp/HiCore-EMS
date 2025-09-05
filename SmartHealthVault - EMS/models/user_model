@@ -1,0 +1,12 @@
+from pydantic import BaseModel, Field, EmailStr
+from typing import Optional
+
+class User(BaseModel):
+    id: Optional[str] = None
+    name: str
+    email: Optional[EmailStr] = None
+    phone: Optional[str] = None
+    dob: Optional[str] = None
+    blood_group: Optional[str] = None
+    address: Optional[str] = None
+    role: Optional[str] = "patient"

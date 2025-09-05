@@ -1,0 +1,10 @@
+from pydantic import BaseModel
+from typing import Optional, List
+
+class Doctor(BaseModel):
+    id: Optional[str] = None
+    name: str
+    specialization: Optional[str] = None
+    qualifications: Optional[List[str]] = []
+    languages: Optional[List[str]] = []
+    clinic_address: Optional[str] = None

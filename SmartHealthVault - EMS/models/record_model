@@ -1,0 +1,11 @@
+from pydantic import BaseModel
+from typing import Optional, Dict
+
+class Record(BaseModel):
+    id: Optional[str] = None
+    user_id: str
+    doctor_id: Optional[str] = None
+    category: Optional[str] = "prescription"
+    title: Optional[str] = None
+    content: Optional[str] = None
+    metadata: Optional[Dict] = {}

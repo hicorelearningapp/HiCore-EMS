@@ -1,0 +1,9 @@
+from pydantic import BaseModel
+from typing import Optional
+
+class Notification(BaseModel):
+    id: Optional[str] = None
+    user_id: str
+    title: str
+    message: str
+    sent: Optional[bool] = False
