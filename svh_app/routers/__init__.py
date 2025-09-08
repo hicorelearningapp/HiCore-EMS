@@ -5,7 +5,6 @@ from .ai_ml_router import router as ai_ml_router
 from .insurance_router import router as insurance_router
 from .notification_router import router as notification_router
 from .telemedicine_router import router as telemedicine_router
-from .documents import router as documents_router
 
 __all__ = [
     'user_router',
@@ -14,6 +13,5 @@ __all__ = [
     'ai_ml_router',
     'insurance_router',
     'notification_router',
-    'telemedicine_router',
-    'documents_router'
+    'telemedicine_router'
 ]
