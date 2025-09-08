@@ -1,7 +1,7 @@
 from database.db_manager import DatabaseManager
 from database.enums import DBType
-from parsers.ai_ml_parser import AIParser
-from schemas.ai_ml_schema import AIRequest
+from schemas.ai_ml_schema import AIParser
+from parsers.ai_ml_parser import AIRequest
 from typing import List
 from sqlalchemy.orm import Session
 

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from typing import List, Optional
+from typing import List
 from sqlalchemy.orm import Session
 from database.db_manager import get_db_session
 from services.doctor_manager import DoctorManager
