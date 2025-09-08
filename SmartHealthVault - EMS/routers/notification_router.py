@@ -1,34 +1,36 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
+from services.notification_manager import NotificationManager
+from schemas.notification_schema import NotificationCreate, NotificationResponse
 from typing import List
-from models.notification_model import Notification
-from services.notification_service import NotificationService
-from database import get_db
 
-router = APIRouter()
+router = APIRouter(prefix="/notifications", tags=["Notifications"])
+manager = NotificationManager()
 
-def _service(db=Depends(get_db)):
-    return NotificationService(db.notifications)
+@router.post("/", response_model=NotificationResponse)
+def create_notification(notification: NotificationCreate):
+    return manager.create_notification(notification)
 
-@router.post("/", response_model=Notification)
-def create_notification(notification: Notification, svc: NotificationService = Depends(_service)):
-    return svc.send(notification)
+@router.get("/", response_model=List[NotificationResponse])
+def list_notifications():
+    return manager.list_notifications()
 
-@router.get("/{notification_id}", response_model=Notification)
-def get_notification(notification_id: str, svc: NotificationService = Depends(_service)):
-    n = svc.get(notification_id)
+@router.get("/{notification_id}", response_model=NotificationResponse)
+def get_notification(notification_id: str):
+    n = manager.get_notification(notification_id)
     if not n:
         raise HTTPException(status_code=404, detail="Notification not found")
     return n
 
-@router.get("/user/{user_id}", response_model=List[Notification])
-def get_user_notifications(user_id: str, svc: NotificationService = Depends(_service)):
-    return [n for n in svc.store.values() if n.user_id == user_id]
-
-@router.put("/{notification_id}/read", response_model=Notification)
-def mark_as_read(notification_id: str, svc: NotificationService = Depends(_service)):
-    n = svc.get(notification_id)
+@router.put("/{notification_id}/read", response_model=NotificationResponse)
+def mark_as_read(notification_id: str):
+    n = manager.mark_as_read(notification_id)
     if not n:
         raise HTTPException(status_code=404, detail="Notification not found")
-    n.sent = True
-    svc.store[notification_id] = n
     return n
+
+@router.delete("/{notification_id}")
+def delete_notification(notification_id: str):
+    ok = manager.delete_notification(notification_id)
+    if not ok:
+        raise HTTPException(status_code=404, detail="Notification not found")
+    return {"message": "Notification deleted"}

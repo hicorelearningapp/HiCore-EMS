@@ -1,40 +1,37 @@
+# routers/user_router.py
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
-from models.user_model import User
-from services.user_service import UserService
-from database import get_db
+from sqlalchemy.orm import Session
+from services.user_manager import UserManager
+from schemas.user_schema import UserCreate, UserResponse
 
-router = APIRouter()
+router = APIRouter(prefix="/users", tags=["Users"])
 
-def _service(db=Depends(get_db)):
-    return UserService(db.users)
+@router.post("/", response_model=UserResponse)
+def create_user(user: UserCreate, db: Session = Depends(next(get_db_session()))):
+    return UserManager(db).create_user(user)
 
-@router.post("/", response_model=User)
-def create_user(user: User, svc: UserService = Depends(_service)):
-    created = svc.create_user(user)
-    return created
+@router.get("/", response_model=List[UserResponse])
+def list_users(db: Session = Depends(next(get_db_session()))):
+    return UserManager(db).list_users()
 
-@router.get("/", response_model=List[User])
-def list_users(svc: UserService = Depends(_service)):
-    return svc.list_users()
-
-@router.get("/{user_id}", response_model=User)
-def get_user(user_id: str, svc: UserService = Depends(_service)):
-    u = svc.get_user(user_id)
+@router.get("/{user_id}", response_model=UserResponse)
+def get_user(user_id: str, db: Session = Depends(next(get_db_session()))):
+    u = UserManager(db).get_user(user_id)
     if not u:
         raise HTTPException(status_code=404, detail="User not found")
     return u
 
-@router.patch("/{user_id}", response_model=User)
-def update_user(user_id: str, payload: dict, svc: UserService = Depends(_service)):
-    u = svc.update_user(user_id, payload)
+@router.put("/{user_id}", response_model=UserResponse)
+def update_user(user_id: str, updates: dict, db: Session = Depends(next(get_db_session()))):
+    u = UserManager(db).update_user(user_id, updates)
     if not u:
         raise HTTPException(status_code=404, detail="User not found")
     return u
 
 @router.delete("/{user_id}")
-def delete_user(user_id: str, svc: UserService = Depends(_service)):
-    deleted = svc.delete_user(user_id)
-    if not deleted:
+def delete_user(user_id: str, db: Session = Depends(next(get_db_session()))):
+    ok = UserManager(db).delete_user(user_id)
+    if not ok:
         raise HTTPException(status_code=404, detail="User not found")
-    return {"message": "Deleted"}
+    return {"message": "User deleted successfully"}

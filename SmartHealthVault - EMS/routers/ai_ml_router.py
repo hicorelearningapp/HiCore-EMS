@@ -1,26 +1,36 @@
-from fastapi import APIRouter, Depends
-from models.ai_ml_model import AIRequest, AIResponse
-from services.ai_ml_service import AIService
-from database import get_db
+from fastapi import APIRouter, HTTPException
+from services.ai_ml_manager import AIMLManager
+from schemas.ai_ml_schema import AIResultCreate, AIResultResponse
 from typing import List
 
-router = APIRouter()
+router = APIRouter(prefix="/ai-results", tags=["AI/ML"])
+manager = AIMLManager()
 
-def _service(db=Depends(get_db)):
-    return AIService(db.ai_results)
+@router.post("/", response_model=AIResultResponse)
+def create_result(result: AIResultCreate):
+    return manager.create_result(result)
 
-@router.post("/analyze/", response_model=AIResponse)
-def analyze(req: AIRequest, svc: AIService = Depends(_service)):
-    return svc.analyze(req.user_id, req.dict())
+@router.get("/", response_model=List[AIResultResponse])
+def list_results():
+    return manager.list_results()
 
-@router.post("/predict/", response_model=AIResponse)
-def predict(req: AIRequest, svc: AIService = Depends(_service)):
-    return svc.analyze(req.user_id, req.dict())  # placeholder
+@router.get("/{result_id}", response_model=AIResultResponse)
+def get_result(result_id: str):
+    r = manager.get_result(result_id)
+    if not r:
+        raise HTTPException(status_code=404, detail="Result not found")
+    return r
 
-@router.get("/models/", response_model=List[str])
-def list_models():
-    return ["diagnosis-risk-model", "treatment-suggestion-model"]
+@router.put("/{result_id}", response_model=AIResultResponse)
+def update_result(result_id: str, updates: dict):
+    r = manager.update_result(result_id, updates)
+    if not r:
+        raise HTTPException(status_code=404, detail="Result not found")
+    return r
 
-@router.post("/train/")
-def train_model(data: dict):
-    return {"status": "training started", "params": data}
+@router.delete("/{result_id}")
+def delete_result(result_id: str):
+    ok = manager.delete_result(result_id)
+    if not ok:
+        raise HTTPException(status_code=404, detail="Result not found")
+    return {"message": "Result deleted"}

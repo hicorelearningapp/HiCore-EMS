@@ -1,29 +1,36 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
+from services.telemedicine_manager import TelemedicineManager
+from schemas.telemedicine_schema import AppointmentCreate, AppointmentResponse
 from typing import List
-from models.telemedicine_model import Appointment
-from services.telemedicine_service import TelemedicineService
-from database import get_db
 
-router = APIRouter()
+router = APIRouter(prefix="/appointments", tags=["Telemedicine"])
+manager = TelemedicineManager()
 
-def _service(db=Depends(get_db)):
-    return TelemedicineService(db.appointments)
+@router.post("/", response_model=AppointmentResponse)
+def create_appointment(appointment: AppointmentCreate):
+    return manager.create_appointment(appointment)
 
-@router.post("/", response_model=Appointment)
-def schedule_appointment(appt: Appointment, svc: TelemedicineService = Depends(_service)):
-    return svc.schedule(appt)
+@router.get("/", response_model=List[AppointmentResponse])
+def list_appointments():
+    return manager.list_appointments()
 
-@router.get("/{appointment_id}", response_model=Appointment)
-def get_appointment(appointment_id: str, svc: TelemedicineService = Depends(_service)):
-    a = svc.get_appointment(appointment_id)
+@router.get("/{appointment_id}", response_model=AppointmentResponse)
+def get_appointment(appointment_id: str):
+    a = manager.get_appointment(appointment_id)
     if not a:
         raise HTTPException(status_code=404, detail="Appointment not found")
     return a
 
-@router.get("/doctor/{doctor_id}", response_model=List[Appointment])
-def doctor_appointments(doctor_id: str, svc: TelemedicineService = Depends(_service)):
-    return [a for a in svc.store.values() if a.doctor_id == doctor_id]
+@router.put("/{appointment_id}", response_model=AppointmentResponse)
+def update_appointment(appointment_id: str, updates: dict):
+    a = manager.update_appointment(appointment_id, updates)
+    if not a:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    return a
 
-@router.get("/patient/{patient_id}", response_model=List[Appointment])
-def patient_appointments(patient_id: str, svc: TelemedicineService = Depends(_service)):
-    return svc.list_for_user(patient_id)
+@router.delete("/{appointment_id}")
+def delete_appointment(appointment_id: str):
+    ok = manager.delete_appointment(appointment_id)
+    if not ok:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    return {"message": "Appointment deleted"}

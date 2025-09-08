@@ -1,0 +1,10 @@
+from enum import Enum
+
+class DBType(str, Enum):
+    USER_DB = "USER_DB"
+    DOCTOR_DB = "DOCTOR_DB"
+    RECORD_DB = "RECORD_DB"
+    INSURANCE_DB = "INSURANCE_DB"
+    NOTIFICATION_DB = "NOTIFICATION_DB"
+    TELEMEDICINE_DB = "TELEMEDICINE_DB"
+    AI_ML_DB = "AI_ML_DB"

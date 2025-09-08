@@ -1,29 +1,36 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
+from services.doctor_manager import DoctorManager
+from schemas.doctor_schema import DoctorCreate, DoctorResponse
 from typing import List
-from models.doctor_model import Doctor
-from services.doctor_service import DoctorService
-from database import get_db
 
-router = APIRouter()
+router = APIRouter(prefix="/doctors", tags=["Doctors"])
+manager = DoctorManager()
 
-def _service(db=Depends(get_db)):
-    return DoctorService(db.doctors)
+@router.post("/", response_model=DoctorResponse)
+def create_doctor(doctor: DoctorCreate):
+    return manager.create_doctor(doctor)
 
-@router.post("/", response_model=Doctor)
-def register_doctor(doctor: Doctor, svc: DoctorService = Depends(_service)):
-    return svc.create_doctor(doctor)
+@router.get("/", response_model=List[DoctorResponse])
+def list_doctors():
+    return manager.list_doctors()
 
-@router.get("/", response_model=List[Doctor])
-def list_doctors(svc: DoctorService = Depends(_service)):
-    return svc.list_doctors()
-
-@router.get("/{doctor_id}", response_model=Doctor)
-def get_doctor(doctor_id: str, svc: DoctorService = Depends(_service)):
-    d = svc.get_doctor(doctor_id)
+@router.get("/{doctor_id}", response_model=DoctorResponse)
+def get_doctor(doctor_id: str):
+    d = manager.get_doctor(doctor_id)
     if not d:
         raise HTTPException(status_code=404, detail="Doctor not found")
     return d
 
-@router.get("/specialty/{specialty}", response_model=List[Doctor])
-def find_by_specialty(specialty: str, svc: DoctorService = Depends(_service)):
-    return [doc for doc in svc.list_doctors() if doc.specialization == specialty]
+@router.put("/{doctor_id}", response_model=DoctorResponse)
+def update_doctor(doctor_id: str, updates: dict):
+    d = manager.update_doctor(doctor_id, updates)
+    if not d:
+        raise HTTPException(status_code=404, detail="Doctor not found")
+    return d
+
+@router.delete("/{doctor_id}")
+def delete_doctor(doctor_id: str):
+    ok = manager.delete_doctor(doctor_id)
+    if not ok:
+        raise HTTPException(status_code=404, detail="Doctor not found")
+    return {"message": "Doctor deleted"}
