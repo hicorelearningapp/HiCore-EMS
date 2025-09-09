@@ -1,26 +1,21 @@
-from pydantic import BaseModel
-from typing import Optional, Dict
-import datetime
+from models.record_model import RecordModel
+from parsers.record_parser import RecordCreate, RecordResponse
+from datetime import datetime
 
-class RecordCreate(BaseModel):
-    user_id: str
-    doctor_id: Optional[str] = None
-    category: Optional[str] = None
-    title: Optional[str] = None
-    content: Optional[str] = None
-    file_path: Optional[str] = None
-    metadata: Optional[Dict] = None
+class RecordParser:
+    @staticmethod
+    def parse_create(record: RecordCreate) -> RecordModel:
+        return RecordModel(
+            user_id=record.user_id,
+            doctor_id=record.doctor_id,
+            category=record.category,
+            title=record.title,
+            content=record.content,
+            file_path=record.file_path,
+            metadata=record.metadata,
+            created_at=datetime.utcnow()
+        )
 
-class RecordResponse(BaseModel):
-    id: str
-    user_id: str
-    doctor_id: Optional[str] = None
-    category: Optional[str] = None
-    title: Optional[str] = None
-    content: Optional[str] = None
-    file_path: Optional[str] = None
-    metadata: Optional[Dict] = None
-    created_at: datetime.datetime
-
-    class Config:
-        orm_mode = True
+    @staticmethod
+    def to_json(record: RecordModel) -> RecordResponse:
+        return RecordResponse.from_orm(record)

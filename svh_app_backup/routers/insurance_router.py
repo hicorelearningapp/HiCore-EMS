@@ -3,7 +3,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from database.db_manager import get_db_session
 from services.insurance_manager import InsuranceManager
-from schemas.insurance_schema import PolicyCreate, PolicyResponse, ClaimCreate
+from parsers.insurance_parser import PolicyCreate, PolicyResponse, ClaimCreate
 
 router = APIRouter(prefix="/insurance", tags=["Insurance"])
 

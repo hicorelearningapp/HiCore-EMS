@@ -3,7 +3,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from database.db_manager import get_db_session
 from services.ai_ml_manager import AIManager
-from schemas.ai_ml_schema import AIRequest, AIResponse
+from parsers.ai_ml_parser import AIRequest, AIResponse
 
 router = APIRouter(prefix="/ai", tags=["AI/ML"])
 

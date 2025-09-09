@@ -3,7 +3,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from database.db_manager import get_db_session
 from services.user_manager import UserManager
-from schemas.user_schema import UserCreate, UserResponse
+from parsers.user_parser import UserCreate, UserResponse
 
 router = APIRouter(prefix="/users", tags=["Users"])
 

@@ -3,7 +3,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 from database.db_manager import get_db_session
 from services.doctor_manager import DoctorManager
-from schemas.doctor_schema import DoctorCreate, DoctorResponse
+from parsers.doctor_parser import DoctorCreate, DoctorResponse
 
 router = APIRouter(prefix="/doctors", tags=["Doctors"])
 

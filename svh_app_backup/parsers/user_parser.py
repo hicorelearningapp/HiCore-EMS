@@ -1,19 +1,22 @@
-from models.user_model import UserModel
-from schemas.user_schema import UserCreate, UserResponse
-from passlib.hash import bcrypt
+from pydantic import BaseModel, EmailStr
+from typing import Optional
+import datetime
 
-class UserParser:
-    @staticmethod
-    def parse_create(payload: UserCreate) -> UserModel:
-        return UserModel(
-            name=payload.name,
-            email=payload.email,
-            password_hash=bcrypt.hash(payload.password),
-            gender=payload.gender,
-            age=payload.age,
-            dob=payload.dob
-        )
+class UserCreate(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+    gender: Optional[str] = None
+    age: Optional[int] = None
+    dob: Optional[datetime.date] = None
 
-    @staticmethod
-    def to_response(model: UserModel) -> UserResponse:
-        return UserResponse.from_orm(model)
+class UserResponse(BaseModel):
+    id: str
+    name: str
+    email: EmailStr
+    gender: Optional[str] = None
+    age: Optional[int] = None
+    dob: Optional[datetime.date] = None
+
+    class Config:
+        orm_mode = True

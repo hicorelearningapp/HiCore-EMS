@@ -1,14 +1,6 @@
 from fastapi import FastAPI
-from database.base import Base, engine
-from routers import (
-    user_router,
-    doctor_router,
-    record_router,
-    ai_ml_router,
-    insurance_router,
-    notification_router,
-    telemedicine_router
-)
+from svh_app.routers import user_router, doctor_router, record_router, ai_ml_router, insurance_router, notification_router, telemedicine_router
+from svh_app.database import engine, Base
 
 # Create DB tables
 Base.metadata.create_all(bind=engine)

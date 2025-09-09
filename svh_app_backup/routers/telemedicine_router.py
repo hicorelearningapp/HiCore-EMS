@@ -3,7 +3,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from database.db_manager import get_db_session
 from services.telemedicine_manager import TelemedicineManager
-from schemas.telemedicine_schema import AppointmentCreate, AppointmentResponse
+from parsers.telemedicine_parser import AppointmentCreate, AppointmentResponse
 
 router = APIRouter(prefix="/appointments", tags=["Telemedicine"])
 

@@ -1,20 +1,63 @@
-from models.telemedicine_model import AppointmentModel
-from schemas.telemedicine_schema import AppointmentCreate, AppointmentResponse
+from pydantic import BaseModel, Field
 from datetime import datetime
+from typing import Optional, List
+from enum import Enum
 
-class TelemedicineParser:
-    @staticmethod
-    def parse_create(appointment: AppointmentCreate) -> AppointmentModel:
-        return AppointmentModel(
-            user_id=appointment.user_id,
-            doctor_id=appointment.doctor_id,
-            datetime=appointment.datetime,
-            mode=appointment.mode,
-            status=appointment.status,
-            notes=appointment.notes,
-            created_at=datetime.utcnow()
-        )
+class AppointmentStatus(str, Enum):
+    SCHEDULED = "scheduled"
+    COMPLETED = "completed"
+    CANCELLED = "cancelled"
+    IN_PROGRESS = "in_progress"
 
-    @staticmethod
-    def to_json(appointment: AppointmentModel) -> AppointmentResponse:
-        return AppointmentResponse.from_orm(appointment)
+class AppointmentType(str, Enum):
+    VIDEO = "video"
+    AUDIO = "audio"
+    IN_PERSON = "in_person"
+
+class AppointmentCreate(BaseModel):
+    doctor_id: str
+    patient_id: str
+    appointment_time: datetime
+    duration_minutes: int = 30
+    appointment_type: AppointmentType = AppointmentType.VIDEO
+    reason: Optional[str] = None
+    notes: Optional[str] = None
+
+class AppointmentResponse(AppointmentCreate):
+    id: str
+    status: AppointmentStatus = AppointmentStatus.SCHEDULED
+    created_at: datetime
+    updated_at: datetime
+    meeting_link: Optional[str] = None
+    
+    class Config:
+        orm_mode = True
+
+class AppointmentUpdate(BaseModel):
+    status: Optional[AppointmentStatus] = None
+    notes: Optional[str] = None
+    meeting_link: Optional[str] = None
+    duration_minutes: Optional[int] = None
+
+class PrescriptionItem(BaseModel):
+    medicine_name: str
+    dosage: str
+    frequency: str
+    duration: str
+    instructions: Optional[str] = None
+
+class PrescriptionCreate(BaseModel):
+    appointment_id: str
+    diagnosis: str
+    notes: Optional[str] = None
+    medicines: List[PrescriptionItem] = []
+
+class PrescriptionResponse(PrescriptionCreate):
+    id: str
+    doctor_id: str
+    patient_id: str
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        orm_mode = True

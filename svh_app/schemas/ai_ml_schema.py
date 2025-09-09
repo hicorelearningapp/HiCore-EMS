@@ -1,5 +1,5 @@
 from models.ai_ml_model import AIResultModel
-from schemas.ai_ml_schema import AIRequest, AIResponse
+from parsers.ai_ml_parser import AIRequest, AIResponse
 import json
 
 class AIParser:

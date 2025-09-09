@@ -1,20 +1,17 @@
-from pydantic import BaseModel
-from typing import Optional
+from models.doctor_model import DoctorModel
+from parsers.doctor_parser import DoctorCreate, DoctorResponse
 
-class DoctorCreate(BaseModel):
-    name: str
-    specialization: Optional[str] = None
-    qualifications: Optional[str] = None
-    languages: Optional[str] = None
-    clinic_address: Optional[str] = None
+class DoctorParser:
+    @staticmethod
+    def parse_create(doctor: DoctorCreate) -> DoctorModel:
+        return DoctorModel(
+            name=doctor.name,
+            specialization=doctor.specialization,
+            qualifications=doctor.qualifications,
+            languages=doctor.languages,
+            clinic_address=doctor.clinic_address
+        )
 
-class DoctorResponse(BaseModel):
-    id: str
-    name: str
-    specialization: Optional[str] = None
-    qualifications: Optional[str] = None
-    languages: Optional[str] = None
-    clinic_address: Optional[str] = None
-
-    class Config:
-        orm_mode = True
+    @staticmethod
+    def to_json(doctor: DoctorModel) -> DoctorResponse:
+        return DoctorResponse.from_orm(doctor)

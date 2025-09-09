@@ -3,7 +3,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from database.db_manager import get_db_session
 from services.notification_manager import NotificationManager
-from schemas.notification_schema import NotificationCreate, NotificationResponse
+from parsers.notification_parser import NotificationCreate, NotificationResponse
 
 router = APIRouter(prefix="/notifications", tags=["Notifications"])
 
