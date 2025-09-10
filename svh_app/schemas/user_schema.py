@@ -1,5 +1,5 @@
 from models.user_model import UserModel
-from schemas.user_schema import UserCreate, UserResponse
+from parsers.user_parser import UserCreate, UserResponse
 from passlib.hash import bcrypt
 
 class UserParser:

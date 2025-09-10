@@ -1,7 +1,7 @@
 from database.db_manager import DatabaseManager
 from database.enums import DBType
-from parsers.insurance_parser import InsuranceParser
-from schemas.insurance_schema import PolicyCreate, ClaimCreate
+from schemas.insurance_schema import InsuranceParser
+from parsers.insurance_parser import PolicyCreate, ClaimCreate
 from typing import List
 from sqlalchemy.orm import Session
 

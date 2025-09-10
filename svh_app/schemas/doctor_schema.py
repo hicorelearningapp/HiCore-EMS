@@ -1,5 +1,5 @@
 from models.doctor_model import DoctorModel
-from schemas.doctor_schema import DoctorCreate, DoctorResponse
+from parsers.doctor_parser import DoctorCreate, DoctorResponse
 
 class DoctorParser:
     @staticmethod

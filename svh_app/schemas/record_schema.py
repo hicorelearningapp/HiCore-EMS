@@ -1,5 +1,5 @@
 from models.record_model import RecordModel
-from schemas.record_schema import RecordCreate, RecordResponse
+from parsers.record_parser import RecordCreate, RecordResponse
 from datetime import datetime
 
 class RecordParser:

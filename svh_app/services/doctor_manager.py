@@ -1,7 +1,7 @@
 from database.db_manager import DatabaseManager
 from database.enums import DBType
-from parsers.doctor_parser import DoctorParser
-from schemas.doctor_schema import DoctorCreate
+from schemas.doctor_schema import DoctorParser
+from parsers.doctor_parser import DoctorCreate
 from typing import List
 from sqlalchemy.orm import Session
 

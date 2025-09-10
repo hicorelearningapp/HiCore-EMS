@@ -5,7 +5,7 @@ from database.db_manager import get_db_session
 from services.record_manager import RecordManager
 import shutil, os
 from uuid import uuid4
-from schemas.record_schema import RecordCreate, RecordResponse
+from parsers.record_parser import RecordCreate, RecordResponse
 
 UPLOAD_DIR = "./uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)

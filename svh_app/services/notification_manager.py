@@ -1,7 +1,7 @@
 from database.db_manager import DatabaseManager
 from database.enums import DBType
-from parsers.notification_parser import NotificationParser
-from schemas.notification_schema import NotificationCreate
+from schemas.notification_schema import NotificationParser
+from parsers.notification_parser import NotificationCreate
 from typing import List
 from sqlalchemy.orm import Session
 

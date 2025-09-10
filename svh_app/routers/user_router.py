@@ -3,11 +3,12 @@ from typing import List
 from sqlalchemy.orm import Session
 from database.db_manager import get_db_session
 from services.user_manager import UserManager
-from schemas.user_schema import UserCreate, UserResponse
+from schemas.user_schema import UserParser
+from parsers.user_parser import UserCreate
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
-@router.post("/", response_model=UserResponse)
+@router.post("/", response_model=UserParser.to_response)
 def create_user(user: UserCreate, db: Session = Depends(get_db_session)):
     try:
         return UserManager(db).create_user(user)

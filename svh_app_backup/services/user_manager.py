@@ -1,7 +1,7 @@
 from database.db_manager import DatabaseManager
 from database.enums import DBType
-from parsers.user_parser import UserParser
-from schemas.user_schema import UserCreate
+from schemas.user_schema import UserParser
+from parsers.user_parser import UserCreate
 from typing import List, Optional
 from sqlalchemy.orm import Session
 

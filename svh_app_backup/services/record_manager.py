@@ -1,7 +1,7 @@
 from database.db_manager import DatabaseManager
 from database.enums import DBType
-from parsers.record_parser import RecordParser
-from schemas.record_schema import RecordCreate
+from schemas.record_schema import RecordParser
+from parsers.record_parser import RecordCreate
 from typing import List
 from sqlalchemy.orm import Session
 

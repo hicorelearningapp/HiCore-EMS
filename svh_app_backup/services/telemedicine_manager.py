@@ -1,7 +1,7 @@
 from database.db_manager import DatabaseManager
 from database.enums import DBType
-from parsers.telemedicine_parser import TelemedicineParser
-from schemas.telemedicine_schema import AppointmentCreate
+from schemas.telemedicine_schema import TelemedicineParser
+from parsers.telemedicine_parser import AppointmentCreate
 from typing import List
 from sqlalchemy.orm import Session
 

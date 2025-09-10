@@ -1,5 +1,5 @@
 from models.insurance_model import PolicyModel, ClaimModel
-from schemas.insurance_schema import PolicyCreate, PolicyResponse, ClaimCreate
+from parsers.insurance_parser import PolicyCreate, PolicyResponse, ClaimCreate
 import json
 from datetime import datetime
 

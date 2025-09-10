@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlalchemy.orm import Session
 from database.db_manager import get_db_session
-from services.telemedicine_manager import TelemedicineManager
-from schemas.telemedicine_schema import AppointmentCreate, AppointmentResponse
+from schemas.telemedicine_schema import TelemedicineParser
+from parsers.telemedicine_parser import AppointmentCreate
 
 router = APIRouter(prefix="/appointments", tags=["Telemedicine"])
 
-@router.post("/", response_model=AppointmentResponse)
+@router.post("/", response_model=TelemedicineParser.to_response)
 def schedule(payload: AppointmentCreate, db: Session = Depends(get_db_session)):
     return TelemedicineManager(db).schedule(payload)
 

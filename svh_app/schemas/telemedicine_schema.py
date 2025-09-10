@@ -1,5 +1,5 @@
 from models.telemedicine_model import AppointmentModel
-from schemas.telemedicine_schema import AppointmentCreate, AppointmentResponse
+from parsers.telemedicine_parser import AppointmentCreate, AppointmentResponse
 from datetime import datetime
 
 class TelemedicineParser:
