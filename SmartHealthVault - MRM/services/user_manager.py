@@ -4,6 +4,7 @@ from schemas.user_schema import UserParser
 from parsers.user_parser import UserCreate
 from typing import List, Optional
 from sqlalchemy.orm import Session
+from datetime import datetime
 
 class UserManager:
     def __init__(self, db_session: Session):
@@ -25,9 +26,19 @@ class UserManager:
         return [UserParser.to_response(r) for r in rows]
 
     def update_user(self, user_id: str, updates: dict):
+        # Handle password hashing
         if "password" in updates:
             from passlib.hash import bcrypt
             updates["password_hash"] = bcrypt.hash(updates.pop("password"))
+            
+        # Convert string date to date object if needed
+        if "dob" in updates and isinstance(updates["dob"], str):
+            try:
+                updates["dob"] = datetime.strptime(updates["dob"], "%Y-%m-%d").date()
+            except (ValueError, TypeError):
+                # If date format is invalid, remove it from updates
+                del updates["dob"]
+                
         updated = self.db.update(user_id, updates)
         return UserParser.to_response(updated) if updated else None
 

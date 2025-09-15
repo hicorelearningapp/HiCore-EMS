@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, DateTime
+from sqlalchemy import Column, String, Integer, Date
 from database.base import Base
 import uuid
 
@@ -10,4 +10,7 @@ class UserModel(Base):
     password_hash = Column(String, nullable=False)
     gender = Column(String, nullable=True)
     age = Column(Integer, nullable=True)
-    dob = Column(DateTime, nullable=True)
+    dob = Column(Date, nullable=True)
+    blood_group = Column(String, nullable=True)
+    address = Column(String, nullable=True)
+    role = Column(String, nullable=False, default="patient")

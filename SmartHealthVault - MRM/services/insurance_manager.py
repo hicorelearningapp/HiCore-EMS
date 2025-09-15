@@ -1,8 +1,8 @@
 from database.db_manager import DatabaseManager
 from database.enums import DBType
 from schemas.insurance_schema import InsuranceParser
-from parsers.insurance_parser import PolicyCreate, ClaimCreate
-from typing import List
+from parsers.insurance_parser import PolicyCreate, ClaimCreate, ClaimResponse
+from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
 
 class InsuranceManager:
@@ -26,3 +26,27 @@ class InsuranceManager:
         claim = InsuranceParser.parse_claim(payload)
         created = self.db.insert(claim)
         return {"claim_id": created.id, "status": created.status, "details": {"policy_id": created.policy_id, "amount": created.amount}}
+
+    def get_claim(self, claim_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Retrieve claim details by claim ID
+        
+        Args:
+            claim_id: The ID of the claim to retrieve
+            
+        Returns:
+            Dictionary containing claim details or None if not found
+        """
+        claim = self.db.get_by_id(claim_id)
+        if not claim:
+            return None
+            
+        return {
+            'claim_id': claim.id,
+            'policy_id': claim.policy_id,
+            'patient_id': claim.patient_id,
+            'amount': claim.amount,
+            'reason': claim.reason,
+            'status': claim.status,
+            'created_at': claim.created_at.isoformat() if claim.created_at else None
+        }

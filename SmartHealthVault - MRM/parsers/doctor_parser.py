@@ -8,6 +8,9 @@ class DoctorCreate(BaseModel):
     languages: Optional[str] = None
     clinic_address: Optional[str] = None
 
+    class Config:
+        from_attributes = True
+
 class DoctorResponse(BaseModel):
     id: str
     name: str
@@ -17,4 +20,5 @@ class DoctorResponse(BaseModel):
     clinic_address: Optional[str] = None
 
     class Config:
+        from_attributes = True
         orm_mode = True

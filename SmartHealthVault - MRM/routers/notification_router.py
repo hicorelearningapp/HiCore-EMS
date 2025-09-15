@@ -15,6 +15,22 @@ def create_notification(payload: NotificationCreate, db: Session = Depends(get_d
 def user_notifications(user_id: str, db: Session = Depends(get_db_session)):
     return NotificationManager(db).list_notifications()
 
+@router.get("/{notification_id}", response_model=NotificationResponse)
+def get_notification(notification_id: str, db: Session = Depends(get_db_session)):
+    """
+    Get a specific notification by ID
+    
+    - **notification_id**: The ID of the notification to retrieve
+    - Returns: The requested notification details
+    """
+    notification = NotificationManager(db).get_notification(notification_id)
+    if not notification:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Notification with ID {notification_id} not found"
+        )
+    return notification
+
 @router.put("/{notification_id}/read", response_model=NotificationResponse)
 def mark_read(notification_id: str, db: Session = Depends(get_db_session)):
     n = NotificationManager(db).mark_as_read(notification_id)

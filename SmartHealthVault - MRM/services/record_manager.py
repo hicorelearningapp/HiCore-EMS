@@ -27,3 +27,18 @@ class RecordManager:
 
     def delete_record(self, record_id: str):
         return self.db.delete(record_id)
+
+    def get_records_by_patient(self, patient_id: str) -> List[dict]:
+        """
+        Get all records for a specific patient
+        
+        Args:
+            patient_id: ID of the patient whose records to retrieve
+            
+        Returns:
+            List of record objects for the specified patient
+        """
+        # Get all records and filter by patient_id
+        all_records = self.db.list_all()
+        patient_records = [r for r in all_records if str(r.user_id) == str(patient_id)]
+        return [RecordParser.to_json(record) for record in patient_records]
